@@ -2,7 +2,7 @@ import java.util.List;
 
 public class PlayerDeck extends AbstractPlayerDeck {
     private Player player;  
-    private double bet = 50;
+    private double bet = 5;
 
     public PlayerDeck() {
     }

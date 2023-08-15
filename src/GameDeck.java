@@ -46,10 +46,19 @@ public class GameDeck extends AbstractDeck {
 
     // Index'e göre kart çek
     public Card buyCard(int index) {
-        Card card = this.cards.get(index);
+    	try {
+			Card card = this.cards.get(index);
         this.cards.remove(card);
-
         return card;
+		} catch (Exception e) {
+			createDeck();
+			System.out.println("Yeni Deste Oluşturuldu.");
+			Card card = this.cards.get(index);
+	        this.cards.remove(card);
+	        return card;
+		}
+		
+        
     }
 
     // İlk el için iki kart çek

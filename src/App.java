@@ -166,6 +166,5 @@ public class App {
 		}
 	}
 	
-	//Yeni el için kartları sıfırlama.
 	
 }
