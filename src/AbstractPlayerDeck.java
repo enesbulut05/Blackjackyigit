@@ -23,6 +23,9 @@ public abstract class AbstractPlayerDeck extends AbstractDeck {
         if (aceCount > 0 && total <= 11) {
             result = result + " ya da " + String.valueOf(total + 10);
         }
+        if (getStatus() == Status.BLACKJACK){
+        	result = "21";
+        }
 
         return result;
     }

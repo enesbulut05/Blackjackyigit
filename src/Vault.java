@@ -13,7 +13,7 @@ public class Vault implements GameParticipant {
     public void showCards() {
         vaultDeck.showCards();
 
-        if (vaultDeck.getCardTotal() >= 17) {
+        if (vaultDeck.getCardTotal() >= 17 && vaultDeck.getStatus()!= Status.BLACKJACK) {
             vaultDeck.setStatus(Status.INACTIVE);
         }
     }

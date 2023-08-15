@@ -1,48 +1,61 @@
 import java.util.List;
 
 public class PlayerDeck extends AbstractPlayerDeck {
-    private Player player;  
-    private double bet = 5;
+	private Player player;
+	private double bet = 5;
 
-    public PlayerDeck() {
-    }
+	public PlayerDeck() {
+	}
 
-    public PlayerDeck(List<Card> cards) {
-        this.cards = cards;
-    }
+	public PlayerDeck(List<Card> cards) {
+		this.cards = cards;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-    
-    public double getBet() {
-        return this.bet;
-    }
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
-    public void setBet(double bet) {
-        this.bet = bet;
-    }
+	public double getBet() {
+		return this.bet;
+	}
 
-    @Override
-    public void showResult() {
-        System.out.println(player.getName() + ":");
-        System.out.print(this.toString() + " - Toplam Değer: " + this.cardTotal);
-        int vaultDeckTotal = UtilService.getVault().getVaultDeck().getCardTotal();
+	public void setBet(double bet) {
+		this.bet = bet;
+	}
 
-        if (this.cardTotal > 21 || (this.cardTotal < vaultDeckTotal && vaultDeckTotal<=21)) {
-            System.out.print(" --- Kaybetti.");
-        } else if (this.cardTotal == vaultDeckTotal) {
-            player.addBalance(bet);
-            System.out.print(" --- Berabere.");
-        } else {
-            player.addBalance(bet * 2);
-            System.out.print(" --- Kazandı.");
-        }
-        System.out.println(" --- Güncel Bakiye: " + player.getBalance() + "\n");
-    }
-   
+	@Override
+	public void showResult() {
+		System.out.println(player.getName() + ":");
+		System.out.print(this.toString() + " - Toplam Değer: " + this.cardTotal);
+		int vaultDeckTotal = UtilService.getVault().getVaultDeck().getCardTotal();
+
+		if (this.cardTotal > 21 || (this.cardTotal < vaultDeckTotal && vaultDeckTotal <= 21)) {
+			System.out.print(" --- Kaybetti.");
+		} else if (this.cardTotal == vaultDeckTotal) {
+			if (getStatus() == Status.BLACKJACK
+					&& UtilService.getVault().getVaultDeck().getStatus() != Status.BLACKJACK) {
+				player.addBalance(bet * 2);
+				System.out.print(" --- Kazandı.");
+			}
+			else if (getStatus() != Status.BLACKJACK
+					&& UtilService.getVault().getVaultDeck().getStatus() == Status.BLACKJACK) {
+				
+				System.out.print(" --- Kaybetti.");
+			}
+
+			else {
+				player.addBalance(bet);
+				System.out.print(" --- Berabere.");
+			}
+		} else {
+			player.addBalance(bet * 2);
+			System.out.print(" --- Kazandı.");
+		}
+		System.out.println(" --- Güncel Bakiye: " + player.getBalance() + "\n");
+	}
+
 }

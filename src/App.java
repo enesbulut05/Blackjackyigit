@@ -21,11 +21,11 @@ public class App {
 
 			// El başladı
 			while (true) {
-			
+
 				for (Player player : players) {
 					PlayerDeck playerDeck = new PlayerDeck();
 					player.resetPlayerDeck();
-					
+
 					// Bu kontrol yeni ele taşınacak
 					if (playerDeck.getBet() > player.getBalance()) {
 						System.out.println(player.getName() + " Yetersiz Bakiye Sebeyile Oyuna Dahil Edilmedi.");
@@ -33,26 +33,38 @@ public class App {
 					} else {
 						// Oyuncu kartlarını çek
 						playerDeck.setCards(gameDeck.buyDoubleCard(players.size() - players.indexOf(player)));
-						// playerDeck.setCards(new ArrayList<>(List.of(new Card("2", 2), new Card("2",
-						// 2))));
+					//	playerDeck.setCards(new ArrayList<>(List.of(new Card("10", 10), new Card("A", 1))));
 						player.setPlayerDeck(playerDeck);
 
 						player.reduceBalance(playerDeck.getBet());
+
+						if (playerDeck.calculateCardTotal().contains("21")) {
+							playerDeck.setStatus(Status.BLACKJACK);
+						}
+
 						System.out.println(player.getName() + ": Bahis miktarı: " + playerDeck.getBet()
 								+ " --- Güncel Bakiye: " + player.getBalance());
 						playerDeck.showCards();
+
 					}
 				}
 
 				// Kasa kartlarını çek
 				VaultDeck vaultDeck = new VaultDeck(gameDeck.buyDoubleCard(0));
-				vault.setVaultDeck(vaultDeck);
+				vault.setVaultDeck(vaultDeck);			
+			//	vaultDeck.setCards(new ArrayList<>(List.of(new Card("10", 10), new Card("A", 1))));
 				vaultDeck.showFirstCard();
+			
+				if (vaultDeck.calculateCardTotal().contains("21")) {
+					vaultDeck.setStatus(Status.BLACKJACK);
+				}
 
-				// Soruları sor
-				for (Player player : players) {
-					firstQuestion(player);
-					regularQuestion(player);
+				// Soruları sor (Eğer Kasa Blackjack değilse)
+				if (vaultDeck.getStatus() != Status.BLACKJACK) {
+					for (Player player : players) {
+						firstQuestion(player);
+						regularQuestion(player);
+					}
 				}
 
 				// Kasa oynat
@@ -66,9 +78,8 @@ public class App {
 
 				// Sonuçları yazdır
 				for (Player player : players) {
-					player.showResult();		
+					player.showResult();
 				}
-				
 
 				System.out.println(
 						"Devam etmek için herhangi bir tuşa basın. Oyunu kapatmak için 'kapat' girin. Yeni oyun için 'yeni' girin.");
@@ -77,8 +88,7 @@ public class App {
 				if (giris.equals("kapat")) {
 					newGame = false;
 					break;
-				}
-				else if (giris.equals("yeni")) {
+				} else if (giris.equals("yeni")) {
 					break;
 				}
 			}
@@ -136,7 +146,9 @@ public class App {
 			}
 		}
 		System.out.print(player.getName() + ": ");
-		askQuestion(firstHandler, question, playerDeck);
+		if (playerDeck.getStatus() != Status.BLACKJACK) {
+			askQuestion(firstHandler, question, playerDeck);
+		}
 	}
 
 	// Oyunculara soru sorma
@@ -165,6 +177,5 @@ public class App {
 			hasAnswered = answerHandler.handle(scanner.nextLine(), playerDeck);
 		}
 	}
-	
-	
+
 }
