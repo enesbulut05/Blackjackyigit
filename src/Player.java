@@ -65,4 +65,8 @@ public class Player implements GameParticipant {
             playerDeck.showResult();
         }
     }
+    
+    public void resetPlayerDeck() {
+    	this.playerDecks.clear();
+    }
 }

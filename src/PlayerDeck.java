@@ -33,7 +33,7 @@ public class PlayerDeck extends AbstractPlayerDeck {
         System.out.print(this.toString() + " - Toplam Değer: " + this.cardTotal);
         int vaultDeckTotal = UtilService.getVault().getVaultDeck().getCardTotal();
 
-        if (this.cardTotal > 21 || this.cardTotal < vaultDeckTotal) {
+        if (this.cardTotal > 21 || (this.cardTotal < vaultDeckTotal && vaultDeckTotal<=21)) {
             System.out.print(" --- Kaybetti.");
         } else if (this.cardTotal == vaultDeckTotal) {
             player.addBalance(bet);
@@ -44,4 +44,5 @@ public class PlayerDeck extends AbstractPlayerDeck {
         }
         System.out.println(" --- Güncel Bakiye: " + player.getBalance() + "\n");
     }
+   
 }

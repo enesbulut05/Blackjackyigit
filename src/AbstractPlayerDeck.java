@@ -58,4 +58,5 @@ public abstract class AbstractPlayerDeck extends AbstractDeck {
     public void setStatus(Status status) {
         this.status = status;
     }
+    
 }

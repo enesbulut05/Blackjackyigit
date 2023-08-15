@@ -32,4 +32,8 @@ public abstract class AbstractDeck {
     public String toString() {
         return this.cards.toString();
     }
+    
+    public void resetCards() {
+    	this.cards.clear();
+    }
 }
