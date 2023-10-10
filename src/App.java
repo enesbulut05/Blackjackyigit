@@ -55,15 +55,16 @@ public class App {
 				// Kasa kartlarını çek
 				VaultDeck vaultDeck = new VaultDeck(gameDeck.buyDoubleCard(0));
 				vault.setVaultDeck(vaultDeck);
-				vaultDeck.setCards(new ArrayList<>(List.of(new Card("A", 1), new Card("5", 5))));
+				//vaultDeck.setCards(new ArrayList<>(List.of(new Card("A", 1), new Card("3", 3))));
 				vaultDeck.showFirstCard();
 
-				if (vaultDeck.getCard(0).getName() == "A")
-					;
+				if (vaultDeck.getCard(0).getName().equals("A"))
 				{
 					vaultDeck.setSgStatus(SgStatus.SIGORTAELI);
 				}
-				if (vaultDeck.getCardTotal() == 21) {
+				
+				
+				if (vaultDeck.calculateCardTotal().contains("21")) {
 					vaultDeck.setStatus(Status.BLACKJACK);
 				}
 
@@ -75,7 +76,9 @@ public class App {
 				}
 
 				if (vaultDeck.getStatus() != Status.BLACKJACK) {
-					System.out.println("Kasa BlackJack değil. Oyun devam ediyor...");
+					if (vaultDeck.getSgStatus() == SgStatus.SIGORTAELI) {
+						System.out.println("Kasa BlackJack değil. Oyun devam ediyor...");
+					}
 					for (Player player : players) {
 
 						firstQuestion(player);
