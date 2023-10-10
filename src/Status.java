@@ -1,5 +1,8 @@
 public enum Status {
     ACTIVE,
     INACTIVE,
-    BLACKJACK
+    BLACKJACK,
+
+
+    
 }

@@ -10,6 +10,8 @@ public class DoubleHandler extends BaseAnswerHandler {
 
             System.out.println("Bahis 2'ye katlandı. Yeni kart çekildi. --- Güncel Bakiye: " + player.getBalance());
             playerDeck.showCards();
+            
+            playerDeck.setStatus(Status.INACTIVE);
             return true;
         }
         return false;

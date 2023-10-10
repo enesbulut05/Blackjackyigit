@@ -2,8 +2,10 @@ import java.util.List;
 
 public class PlayerDeck extends AbstractPlayerDeck {
 	private Player player;
-	private double bet = 5;
-
+	
+	private int defaultBet = 5;
+	private double bet = defaultBet;
+	
 	public PlayerDeck() {
 	}
 
@@ -29,9 +31,22 @@ public class PlayerDeck extends AbstractPlayerDeck {
 
 	@Override
 	public void showResult() {
+		if (UtilService.getVault().getVaultDeck().getSgStatus() == SgStatus.SIGORTAELI
+				&& getSgStatus()== SgStatus.SIGORTALI) {
+			if(UtilService.getVault().getVaultDeck().getStatus() == Status.BLACKJACK) {
+				player.addBalance(defaultBet*3);
+				System.out.println(player.getName()+" Sigortadan "+ defaultBet*3 + " kazandı.");
+			}
+			else {
+				System.out.println(player.getName()+" Sigortadan " + defaultBet + " kaybetti.");
+			}
+		}
+		
+		
 		System.out.println(player.getName() + ":");
 		System.out.print(this.toString() + " - Toplam Değer: " + this.cardTotal);
 		int vaultDeckTotal = UtilService.getVault().getVaultDeck().getCardTotal();
+		
 
 		if (this.cardTotal > 21 || (this.cardTotal < vaultDeckTotal && vaultDeckTotal <= 21)) {
 			System.out.print(" --- Kaybetti.");
@@ -40,10 +55,9 @@ public class PlayerDeck extends AbstractPlayerDeck {
 					&& UtilService.getVault().getVaultDeck().getStatus() != Status.BLACKJACK) {
 				player.addBalance(bet * 2);
 				System.out.print(" --- Kazandı.");
-			}
-			else if (getStatus() != Status.BLACKJACK
+			} else if (getStatus() != Status.BLACKJACK
 					&& UtilService.getVault().getVaultDeck().getStatus() == Status.BLACKJACK) {
-				
+
 				System.out.print(" --- Kaybetti.");
 			}
 

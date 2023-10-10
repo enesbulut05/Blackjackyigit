@@ -1,6 +1,7 @@
 public abstract class AbstractPlayerDeck extends AbstractDeck {
     protected int cardTotal = 0;
     protected Status status = Status.ACTIVE;
+    protected SgStatus sgstatus = SgStatus.SIGORTASIZ;
 
     public abstract void showResult();
 
@@ -60,6 +61,13 @@ public abstract class AbstractPlayerDeck extends AbstractDeck {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+    public SgStatus getSgStatus() {
+        return sgstatus;
+    }
+
+    public void setSgStatus(SgStatus sgstatus) {
+        this.sgstatus = sgstatus;
     }
     
 }

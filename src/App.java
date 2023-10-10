@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sql.rowset.serial.SerialJavaObject;
+
 public class App {
 	public static Scanner scanner = new Scanner(System.in);
 	public static List<Player> players = new ArrayList<>();
@@ -26,14 +28,15 @@ public class App {
 					PlayerDeck playerDeck = new PlayerDeck();
 					player.resetPlayerDeck();
 
-					// Bu kontrol yeni ele taşınacak
+					// Bu kontrol yeni ele taşınacak ???
 					if (playerDeck.getBet() > player.getBalance()) {
 						System.out.println(player.getName() + " Yetersiz Bakiye Sebeyile Oyuna Dahil Edilmedi.");
 						players.remove(player);
 					} else {
 						// Oyuncu kartlarını çek
 						playerDeck.setCards(gameDeck.buyDoubleCard(players.size() - players.indexOf(player)));
-					//	playerDeck.setCards(new ArrayList<>(List.of(new Card("10", 10), new Card("A", 1))));
+						// playerDeck.setCards(new ArrayList<>(List.of(new Card("10", 10), new Card("A",
+						// 1))));
 						player.setPlayerDeck(playerDeck);
 
 						player.reduceBalance(playerDeck.getBet());
@@ -51,17 +54,30 @@ public class App {
 
 				// Kasa kartlarını çek
 				VaultDeck vaultDeck = new VaultDeck(gameDeck.buyDoubleCard(0));
-				vault.setVaultDeck(vaultDeck);			
-			//	vaultDeck.setCards(new ArrayList<>(List.of(new Card("10", 10), new Card("A", 1))));
+				vault.setVaultDeck(vaultDeck);
+				vaultDeck.setCards(new ArrayList<>(List.of(new Card("A", 1), new Card("5", 5))));
 				vaultDeck.showFirstCard();
-			
-				if (vaultDeck.calculateCardTotal().contains("21")) {
+
+				if (vaultDeck.getCard(0).getName() == "A")
+					;
+				{
+					vaultDeck.setSgStatus(SgStatus.SIGORTAELI);
+				}
+				if (vaultDeck.getCardTotal() == 21) {
 					vaultDeck.setStatus(Status.BLACKJACK);
 				}
 
-				// Soruları sor (Eğer Kasa Blackjack değilse)
-				if (vaultDeck.getStatus() != Status.BLACKJACK) {
+				// Soruları sor
+				if (vaultDeck.getSgStatus() == SgStatus.SIGORTAELI) {
 					for (Player player : players) {
+						sigortaSorusu(player, vaultDeck);
+					}
+				}
+
+				if (vaultDeck.getStatus() != Status.BLACKJACK) {
+					System.out.println("Kasa BlackJack değil. Oyun devam ediyor...");
+					for (Player player : players) {
+
 						firstQuestion(player);
 						regularQuestion(player);
 					}
@@ -120,7 +136,7 @@ public class App {
 			System.out.print("Lütfen " + i + ". Oyuncunun adını girin: ");
 			String name = scanner.nextLine();
 
-			if (name.equals("")) {
+			if (name.trim().isEmpty()) {
 				name = "Oyuncu " + i;
 			}
 			players.add(new Player(name));
@@ -128,8 +144,19 @@ public class App {
 		System.out.println();
 	}
 
+	// Sigorta Sor
+	public static void sigortaSorusu(Player player, VaultDeck vaultDeck) {
+		String soru = player.getName() + " Sigorta Yapmak istiyor musunuz? -> EVET / HAYIR ";
+		PlayerDeck playerDeck = player.getPlayerDeckByIndex(0);
+		BaseAnswerHandler SigortaHandler = new EvetHandler();
+		BaseAnswerHandler lastHandler = SigortaHandler.setNextHandler(new HayirHandler());
+		askQuestion(SigortaHandler, soru, playerDeck);
+
+	}
+
 	// Oyunculara ilk soruyu sor
 	public static void firstQuestion(Player player) {
+
 		String question = "Lütfen Seçiniz -> PAS / KART";
 		PlayerDeck playerDeck = player.getPlayerDeckByIndex(0);
 		boolean areCardsSame = playerDeck.getCard(0).getValue() == playerDeck.getCard(1).getValue();
